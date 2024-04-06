@@ -38,6 +38,13 @@ def generate_solved_puzzle():
     solve_sudoku(puzzle)
     return puzzle
 
+def generate_puzzle():
+    puzzle = generate_solved_puzzle()
+    for i in range(9):
+        for j in range(9):
+            if random.random() < 0.5:
+                puzzle[i][j] = '.'
+    return puzzle
 
 def list_fonts():    
     fonts = os.listdir('fonts/')
@@ -63,6 +70,8 @@ def generate_image(puzzle, filepath, img_width=500, img_height=500, padding=10, 
 
     available_fonts = list_fonts()
     font_choice = random.choice(available_fonts)
+
+    print("Using font: ", font_choice)
 
     try:
         font = ImageFont.truetype(f'fonts/{font_choice}', (int)(font_size * modifier))
@@ -108,7 +117,7 @@ def main():
     # Generate puzzles
     puzzles = []
     for i in range(0, args.n):
-        puzzles.append(generate_solved_puzzle())
+        puzzles.append(generate_puzzle())
 
     # Verify generated directory exists
     if not os.path.exists('generated'):
