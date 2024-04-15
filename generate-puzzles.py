@@ -112,7 +112,17 @@ def main():
     # Parse arguments
     parser = argparse.ArgumentParser(description='Generate sudoku puzzles')
     parser.add_argument('n', type=int, help='Number of puzzles to generate')
+    parser.add_argument('--imgs', type=str, help='Output directory for img files')
+    parser.add_argument('--text', type=str, help='Output directory for text files')
     args = parser.parse_args()
+
+    img_dir = 'generated'
+    text_dir = 'textversion'
+
+    if args.imgs:
+        img_dir = args.imgs
+    if args.text:
+        text_dir = args.text
 
     # Generate puzzles
     puzzles = []
@@ -120,14 +130,25 @@ def main():
         puzzles.append(generate_puzzle())
 
     # Verify generated directory exists
-    if not os.path.exists('generated'):
-        os.makedirs('generated')
+    if not os.path.exists(img_dir):
+        os.makedirs(img_dir)
+
+    # Verify textversion directory exists
+    if not os.path.exists(text_dir):
+        os.makedirs(text_dir)
 
     puzzle_count = 0
     for puzzle in puzzles:
         # Generate image
-        with open(f'generated/puzzle_{puzzle_count}.png', 'wb') as f:
+        filename = f"puzzle_{puzzle_count}.png"
+        with open(f'{img_dir}/{filename}', 'wb') as f:
             generate_image(puzzle, f)
+        
+        filename = f"puzzle_{puzzle_count}.txt"
+        with open(f'{text_dir}/{filename}', 'w') as f:
+            for row in puzzle:
+                f.write(' '.join(row) + '\n')
+
         puzzle_count += 1
 
 
