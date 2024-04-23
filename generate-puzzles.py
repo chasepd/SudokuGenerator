@@ -71,8 +71,6 @@ def generate_image(puzzle, filepath, img_width=500, img_height=500, padding=10, 
     available_fonts = list_fonts()
     font_choice = random.choice(available_fonts)
 
-    print("Using font: ", font_choice)
-
     try:
         font = ImageFont.truetype(f'fonts/{font_choice}', (int)(font_size * modifier))
     except IOError:
@@ -127,7 +125,9 @@ def main():
     # Generate puzzles
     puzzles = []
     for i in range(0, args.n):
+        print(f'\rGenerating puzzles... {(i + 1) / args.n * 100:.4f}% complete', end='')
         puzzles.append(generate_puzzle())
+    print()
 
     # Verify generated directory exists
     if not os.path.exists(img_dir):
@@ -139,6 +139,7 @@ def main():
 
     puzzle_count = 0
     for puzzle in puzzles:
+        print(f'\rGenerating puzzle images... {(puzzle_count + 1) / len(puzzles) * 100:.4f}% complete', end='')
         # Generate image
         filename = f"puzzle_{puzzle_count}.png"
         with open(f'{img_dir}/{filename}', 'wb') as f:
@@ -150,6 +151,7 @@ def main():
                 f.write(' '.join(row) + '\n')
 
         puzzle_count += 1
+    print()
 
 
 if __name__ == '__main__':
